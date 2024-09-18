@@ -1,2 +1,3 @@
 # tsukichat-for-discord
-ローマ字を日本語に変換します
+Meatwo310監修の日本語変換DiscordBOT。
+元ネタ: https://github.com/Meatwo310/tsuki-chat
