@@ -52,10 +52,28 @@ def setup(bot: discord.Bot):
         if is_romaji_only(message.content):
             try:
                 if enable.check('./txt/noconv.txt', message.content) == False:
+                    conf = enable.read_yaml(f'./users/{message.author.mention}.yml')
+                    logger.info(conf)
+                    if conf == None:
+                        conf = {f'convert_mode': f'{True}'}
                     conv_msg = romaji.Converter.romaji_to_japanese(message.content)
                     send = f'-# {message.content}\n{conv_msg}'
-                    await send_webhook(message, send)
                     logger.info(f'変換しました「{send}」')
+                    if conf['convert_mode'] == 'True':
+                        try:
+                            await send_webhook(message, send)
+                            logger.info('webhookで送信しました')
+                        except:
+                            await message.reply(f'{conv_msg}\n-# 問題が発生しました', mention_author=False)
+                            logger.warning('問題が発生したためreplyで送信しました')
+                    else:
+                        try:
+                            await message.reply(conv_msg, mention_author=False)
+                            logger.info('replyで送信しました')
+                        except Exception as e:
+                            logger.error(e)
+                            await send_webhook(message, send + f'\n-# 問題が発生しました\n```{e}```')
+                            logger.warning('問題が発生したためwebhookで送信しました')
             except Exception as e:
                 await message.channel.send(f'問題が発生しました\n```{e}```')
                 logger.exception(e)

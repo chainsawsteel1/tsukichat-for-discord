@@ -29,23 +29,14 @@ bot = discord.Bot(
     activity=discord.Game('Starting up...'),
 )
 
-try:
-    import utils.command as command
-    command.setup(bot)
-except:
-    logger.error('commandの読み込みに失敗しました')
+import utils.command as command
+command.setup(bot)
 
-try:
-    import utils.enable as enable
-    enable.setup(bot)
-except:
-    logger.error('enableの読み込みに失敗しました')
+import utils.enable as enable
+enable.setup(bot)
 
-try:
-    import utils.reply as reply
-    reply.setup(bot)
-except:
-    logger.error('replyの読み込みに失敗しました')
+import utils.reply as reply
+reply.setup(bot)
 
 @tasks.loop(seconds=10)
 async def update_status():
